@@ -2,12 +2,109 @@ document.getElementById("start-button").addEventListener("click", () => {
     document.getElementById("resume-form").classList.remove("hidden");
 });
 
+// Autosave to localStorage
+function saveFormData() {
+    const formData = new FormData(document.getElementById("resume-form"));
+    const formObject = {};
+
+    // Save main form fields
+    formData.forEach((value, key) => (formObject[key] = value));
+
+    // Save dynamic fields
+    formObject["experiences"] = getDynamicEntries("experience-container", "work-experience-group");
+    formObject["educations"] = getDynamicEntries("education-container", "education-entry");
+    formObject["projects"] = getDynamicEntries("projects-container", "project-entry");
+    formObject["certifications"] = getDynamicEntries("certifications-container", "certification-entry");
+
+    localStorage.setItem("resumeFormData", JSON.stringify(formObject));
+}
+
+function loadFormData() {
+    const savedData = localStorage.getItem("resumeFormData");
+    if (savedData) {
+        const formObject = JSON.parse(savedData);
+
+        // Load main form fields
+        Object.keys(formObject).forEach((key) => {
+            if (["experiences", "educations", "projects", "certifications"].includes(key)) return;
+            const field = document.querySelector(`[name="${key}"]`);
+            if (field) field.value = formObject[key];
+        });
+
+        // Load dynamic fields
+        if (formObject["experiences"]) {
+            loadDynamicEntries("experience-container", "work-experience-group", formObject["experiences"]);
+        }
+        if (formObject["educations"]) {
+            loadDynamicEntries("education-container", "education-entry", formObject["educations"]);
+        }
+        if (formObject["projects"]) {
+            loadDynamicEntries("projects-container", "project-entry", formObject["projects"]);
+        }
+        if (formObject["certifications"]) {
+            loadDynamicEntries("certifications-container", "certification-entry", formObject["certifications"]);
+        }
+
+        updateResumePreview(); // Update preview with loaded data
+    }
+}
+
+// Utility to extract dynamic entries
+function getDynamicEntries(containerId, entryClass) {
+    const container = document.getElementById(containerId);
+    const entries = [];
+    container.querySelectorAll(`.${entryClass}`).forEach((entry) => {
+        const inputs = {};
+        entry.querySelectorAll("input, textarea").forEach((field) => {
+            inputs[field.name] = field.value;
+        });
+        entries.push(inputs);
+    });
+    return entries;
+}
+
+// Utility to load dynamic entries
+function loadDynamicEntries(containerId, entryClass, data) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = ""; // Clear existing entries
+    data.forEach((item) => {
+        const newEntry = document.createElement("div");
+        newEntry.classList.add(entryClass);
+
+        let entryHTML = "";
+        Object.keys(item).forEach((key) => {
+            const value = item[key];
+            entryHTML += `
+                <div class="input-group">
+                    <label for="${key}">${key.split("-").join(" ")}</label>
+                    ${key.includes("description") || key.includes("responsibilities") ? `
+                    <textarea name="${key}" placeholder="${key.split("-").join(" ")}">${value}</textarea>` : `
+                    <input type="text" name="${key}" placeholder="${key.split("-").join(" ")}" value="${value}">`}
+                </div>
+            `;
+        });
+
+        entryHTML += `<button type="button" class="remove-entry-button">Remove</button>`;
+        newEntry.innerHTML = entryHTML;
+        container.appendChild(newEntry);
+    });
+}
+
+window.addEventListener("load", loadFormData);
+document.querySelectorAll("input, textarea, select").forEach((field) => {
+    field.addEventListener("input", () => {
+        saveFormData();
+        updateResumePreview();
+    });
+});
+
 function handleAddRemoveButtons(containerId, entryClass) {
     const container = document.getElementById(containerId);
 
     container.addEventListener("click", (event) => {
         if (event.target.classList.contains("remove-entry-button")) {
             event.target.closest(`.${entryClass}`).remove();
+            saveFormData();
             updateResumePreview();
         }
     });
@@ -38,6 +135,7 @@ document.getElementById("add-experience").addEventListener("click", () => {
         <button type="button" class="remove-entry-button">Remove</button>
     `;
     container.appendChild(newExperience);
+    saveFormData();
     updateResumePreview();
 });
 
@@ -62,6 +160,7 @@ document.getElementById("add-education").addEventListener("click", () => {
         <button type="button" class="remove-entry-button">Remove</button>
     `;
     container.appendChild(newEducation);
+    saveFormData();
     updateResumePreview();
 });
 
@@ -82,6 +181,7 @@ document.getElementById("add-project").addEventListener("click", () => {
         <button type="button" class="remove-entry-button">Remove</button>
     `;
     container.appendChild(newProject);
+    saveFormData();
     updateResumePreview();
 });
 
@@ -102,6 +202,7 @@ document.getElementById("add-certification").addEventListener("click", () => {
         <button type="button" class="remove-entry-button">Remove</button>
     `;
     container.appendChild(newCertification);
+    saveFormData();
     updateResumePreview();
 });
 
@@ -109,15 +210,6 @@ handleAddRemoveButtons("experience-container", "work-experience-group");
 handleAddRemoveButtons("education-container", "education-entry");
 handleAddRemoveButtons("projects-container", "project-entry");
 handleAddRemoveButtons("certifications-container", "certification-entry");
-
-document.getElementById("style").addEventListener("change", updateResumePreview);
-document.getElementById("name").addEventListener("input", updateResumePreview);
-document.getElementById("email").addEventListener("input", updateResumePreview);
-document.getElementById("phone").addEventListener("input", updateResumePreview);
-document.getElementById("linkedin").addEventListener("input", updateResumePreview);
-document.getElementById("portfolio").addEventListener("input", updateResumePreview);
-document.getElementById("summary").addEventListener("input", updateResumePreview);
-document.getElementById("skills").addEventListener("input", updateResumePreview);
 
 function updateResumePreview() {
     const name = document.getElementById("name").value;
@@ -214,11 +306,11 @@ function updateResumePreview() {
 document.getElementById("download-resume").addEventListener("click", () => {
     const element = document.getElementById("resume-output");
     const opt = {
-        margin:        0,
-        filename:     'resume.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 4, useCORS: true }, // Added useCORS for better rendering
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        margin: 0,
+        filename: "resume.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 4, useCORS: true },
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
     };
 
     html2pdf().from(element).set(opt).save();
@@ -267,25 +359,6 @@ document.getElementById("autofill-resume").addEventListener("click", function ()
             <div class="input-group">
                 <label for="responsibilities">Responsibilities</label>
                 <textarea name="responsibilities" placeholder="Describe your responsibilities and achievements">Led a team to develop a scalable e-commerce platform.</textarea>
-            </div>
-            <button type="button" class="remove-entry-button">Remove</button>
-        </div>
-        <div class="work-experience-group">
-            <div class="input-group">
-                <label for="job-title">Job Title</label>
-                <input type="text" name="job-title" placeholder="Data Analyst" value="Data Analyst">
-            </div>
-            <div class="input-group">
-                <label for="company">Company</label>
-                <input type="text" name="company" placeholder="XYZ Inc." value="XYZ Inc.">
-            </div>
-            <div class="input-group">
-                <label for="work-dates">Dates Worked</label>
-                <input type="text" name="work-dates" placeholder="Jan 2018 - Dec 2019" value="Jan 2018 - Dec 2019">
-            </div>
-            <div class="input-group">
-                <label for="responsibilities">Responsibilities</label>
-                <textarea name="responsibilities" placeholder="Describe your responsibilities and achievements">Analyzed large datasets to provide actionable insights for business strategies.</textarea>
             </div>
             <button type="button" class="remove-entry-button">Remove</button>
         </div>
