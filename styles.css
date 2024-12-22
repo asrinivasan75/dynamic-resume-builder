@@ -1,0 +1,179 @@
+/* General Styling */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #1a1a1a;
+    background-color: #f8fafc;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Hero Section */
+header.hero {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.cta-button {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.cta-button:hover {
+    background-color: #3730a3;
+}
+
+/* Form Section */
+main.form-section {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+}
+
+main h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #4f46e5;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+textarea {
+    height: 80px;
+}
+
+.work-experience-group,
+.education-entry {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9fafb;
+}
+
+/* Buttons */
+.secondary-button,
+.remove-entry-button {
+    background-color: #e0e7ff;
+    color: #4f46e5;
+    border: 1px solid #4f46e5;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 20px;
+}
+
+.secondary-button:hover,
+.remove-entry-button:hover {
+    background-color: #c7d2fe;
+    color: #3730a3;
+}
+
+.remove-entry-button {
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+/* Padding fix for the section headers */
+#add-experience, #add-education {
+    margin-bottom: 40px; /* Increased the margin here for more space */
+}
+
+/* Resume Output */
+.resume-output {
+    margin-top: 40px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    background: #f3f4f6;
+    max-width: 800px;
+    margin: 40px auto;
+}
+
+.resume-output h1 {
+    color: #4f46e5;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.resume-output h2 {
+    color: #4f46e5;
+    font-size: 1.3rem;
+    margin-top: 20px;
+}
+
+.resume-output p {
+    margin: 5px 0;
+    font-size: 1.1rem;
+}
+
+.resume-output .classic {
+    font-family: Arial, sans-serif;
+}
+
+.resume-output .modern {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9f9f9;
+    padding: 30px;
+}
+
+.resume-output .elegant {
+    font-family: 'Georgia', serif;
+    background-color: #f7f7f7;
+    padding: 30px;
+    color: #333;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #f9fafb;
+    color: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    main.form-section {
+        max-width: 100%;
+        margin: 20px;
+    }
+}

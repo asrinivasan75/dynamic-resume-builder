@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Resume Builder</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+</head>
+<body>
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Dynamic Resume Builder</h1>
+            <p>Create and download a professional, stylish resume in minutes.</p>
+            <button class="cta-button" id="start-button">Start Building</button>
+        </div>
+    </header>
+    
+    <main class="form-section">
+        <form id="resume-form" class="hidden">
+            <h2>Personal Information</h2>
+            <div class="input-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="John Doe" required>
+            </div>
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="johndoe@example.com" required>
+            </div>
+            <div class="input-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="+1 123-456-7890" required>
+            </div>
+            <div class="input-group">
+                <label for="linkedin">LinkedIn Profile</label>
+                <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/johndoe">
+            </div>
+            <div class="input-group">
+                <label for="portfolio">Portfolio/Website</label>
+                <input type="url" id="portfolio" name="portfolio" placeholder="https://yourportfolio.com">
+            </div>
+
+            <h2>Education</h2>
+            <div id="education-container">
+                <div class="education-entry">
+                    <div class="input-group">
+                        <label for="degree">Degree</label>
+                        <input type="text" name="degree" placeholder="B.Sc. in Computer Science">
+                    </div>
+                    <div class="input-group">
+                        <label for="institution">Institution</label>
+                        <input type="text" name="institution" placeholder="XYZ University">
+                    </div>
+                    <div class="input-group">
+                        <label for="graduation-year">Graduation Year</label>
+                        <input type="text" name="graduation-year" placeholder="2023">
+                    </div>
+                    <button type="button" class="remove-entry-button">Remove</button>
+                </div>
+            </div>
+            <button type="button" id="add-education" class="secondary-button">Add More Education</button>
+
+            <h2>Work Experience</h2>
+            <div id="experience-container">
+                <div class="work-experience-group">
+                    <div class="input-group">
+                        <label for="job-title">Job Title</label>
+                        <input type="text" name="job-title" placeholder="Software Engineer">
+                    </div>
+                    <div class="input-group">
+                        <label for="company">Company</label>
+                        <input type="text" name="company" placeholder="ABC Corp">
+                    </div>
+                    <div class="input-group">
+                        <label for="work-dates">Dates Worked</label>
+                        <input type="text" name="work-dates" placeholder="Jan 2020 - Dec 2022">
+                    </div>
+                    <div class="input-group">
+                        <label for="responsibilities">Responsibilities</label>
+                        <textarea name="responsibilities" placeholder="Describe your responsibilities and achievements"></textarea>
+                    </div>
+                    <button type="button" class="remove-entry-button">Remove</button>
+                </div>
+            </div>
+            <button type="button" id="add-experience" class="secondary-button">Add More Experience</button>
+
+            <h2>Skills</h2>
+            <div class="input-group">
+                <label for="skills">Skills</label>
+                <textarea id="skills" name="skills" placeholder="E.g., JavaScript, Python, Team Leadership"></textarea>
+            </div>
+
+            <h2>Style Selection</h2>
+            <div class="input-group">
+                <label for="style">Choose a Style</label>
+                <select id="style" name="style">
+                    <option value="classic">Classic</option>
+                    <option value="modern">Modern</option>
+                    <option value="elegant">Elegant</option>
+                </select>
+            </div>
+
+            <button type="button" id="generate-resume" class="cta-button">Generate Resume</button>
+            <button type="button" id="autofill-resume" class="cta-button secondary-button">Autofill Example</button>
+            <button type="button" id="download-resume" class="cta-button hidden">Download Resume</button>
+        </form>
+
+        <div id="resume-output" class="resume-output hidden"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Dynamic Resume Builder. Crafted with ❤️.</p>
+    </footer>
+    
+    <script src="scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</body>
+</html>
