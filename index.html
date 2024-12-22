@@ -10,7 +10,7 @@
 <body>
     <header class="hero">
         <div class="hero-content">
-            <h1>Dynamic Resume Builder</h1>
+            <h1 style="text-align: center;">Dynamic Resume Builder</h1>
             <p>Create and download a professional, stylish resume in minutes.</p>
             <button class="cta-button" id="start-button">Start Building</button>
         </div>
@@ -38,6 +38,12 @@
             <div class="input-group">
                 <label for="portfolio">Portfolio/Website</label>
                 <input type="url" id="portfolio" name="portfolio" placeholder="https://yourportfolio.com">
+            </div>
+
+            <h2>Summary</h2>
+            <div class="input-group">
+                <label for="summary">Professional Summary</label>
+                <textarea id="summary" name="summary" placeholder="A brief summary of your professional background"></textarea>
             </div>
 
             <h2>Education</h2>
@@ -84,6 +90,38 @@
             </div>
             <button type="button" id="add-experience" class="secondary-button">Add More Experience</button>
 
+            <h2>Projects</h2>
+            <div id="projects-container">
+                <div class="project-entry">
+                    <div class="input-group">
+                        <label for="project-title">Project Title</label>
+                        <input type="text" name="project-title" placeholder="Project Title">
+                    </div>
+                    <div class="input-group">
+                        <label for="project-description">Description</label>
+                        <textarea name="project-description" placeholder="Describe the project"></textarea>
+                    </div>
+                    <button type="button" class="remove-entry-button">Remove</button>
+                </div>
+            </div>
+            <button type="button" id="add-project" class="secondary-button">Add More Projects</button>
+
+            <h2>Certifications</h2>
+            <div id="certifications-container">
+                <div class="certification-entry">
+                    <div class="input-group">
+                        <label for="certification-title">Certification Title</label>
+                        <input type="text" name="certification-title" placeholder="Certification Title">
+                    </div>
+                    <div class="input-group">
+                        <label for="certification-year">Year</label>
+                        <input type="text" name="certification-year" placeholder="Year">
+                    </div>
+                    <button type="button" class="remove-entry-button">Remove</button>
+                </div>
+            </div>
+            <button type="button" id="add-certification" class="secondary-button">Add More Certifications</button>
+
             <h2>Skills</h2>
             <div class="input-group">
                 <label for="skills">Skills</label>
@@ -111,8 +149,10 @@
     <footer>
         <p>&copy; 2024 Dynamic Resume Builder. Crafted with ❤️.</p>
     </footer>
-    
-    <script src="scripts.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>

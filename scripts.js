@@ -8,7 +8,7 @@ function handleAddRemoveButtons(containerId, entryClass) {
     container.addEventListener("click", (event) => {
         if (event.target.classList.contains("remove-entry-button")) {
             event.target.closest(`.${entryClass}`).remove();
-            updateResumePreview(); // Update the preview when items are removed
+            updateResumePreview();
         }
     });
 }
@@ -38,7 +38,7 @@ document.getElementById("add-experience").addEventListener("click", () => {
         <button type="button" class="remove-entry-button">Remove</button>
     `;
     container.appendChild(newExperience);
-    updateResumePreview(); // Update the preview when new entries are added
+    updateResumePreview();
 });
 
 document.getElementById("add-education").addEventListener("click", () => {
@@ -62,11 +62,53 @@ document.getElementById("add-education").addEventListener("click", () => {
         <button type="button" class="remove-entry-button">Remove</button>
     `;
     container.appendChild(newEducation);
-    updateResumePreview(); // Update the preview when new entries are added
+    updateResumePreview();
+});
+
+document.getElementById("add-project").addEventListener("click", () => {
+    const container = document.getElementById("projects-container");
+    const newProject = document.createElement("div");
+    newProject.classList.add("project-entry");
+
+    newProject.innerHTML = `
+        <div class="input-group">
+            <label for="project-title">Project Title</label>
+            <input type="text" name="project-title" placeholder="Project Title">
+        </div>
+        <div class="input-group">
+            <label for="project-description">Description</label>
+            <textarea name="project-description" placeholder="Describe the project"></textarea>
+        </div>
+        <button type="button" class="remove-entry-button">Remove</button>
+    `;
+    container.appendChild(newProject);
+    updateResumePreview();
+});
+
+document.getElementById("add-certification").addEventListener("click", () => {
+    const container = document.getElementById("certifications-container");
+    const newCertification = document.createElement("div");
+    newCertification.classList.add("certification-entry");
+
+    newCertification.innerHTML = `
+        <div class="input-group">
+            <label for="certification-title">Certification Title</label>
+            <input type="text" name="certification-title" placeholder="Certification Title">
+        </div>
+        <div class="input-group">
+            <label for="certification-year">Year</label>
+            <input type="text" name="certification-year" placeholder="Year">
+        </div>
+        <button type="button" class="remove-entry-button">Remove</button>
+    `;
+    container.appendChild(newCertification);
+    updateResumePreview();
 });
 
 handleAddRemoveButtons("experience-container", "work-experience-group");
 handleAddRemoveButtons("education-container", "education-entry");
+handleAddRemoveButtons("projects-container", "project-entry");
+handleAddRemoveButtons("certifications-container", "certification-entry");
 
 document.getElementById("style").addEventListener("change", updateResumePreview);
 document.getElementById("name").addEventListener("input", updateResumePreview);
@@ -74,6 +116,7 @@ document.getElementById("email").addEventListener("input", updateResumePreview);
 document.getElementById("phone").addEventListener("input", updateResumePreview);
 document.getElementById("linkedin").addEventListener("input", updateResumePreview);
 document.getElementById("portfolio").addEventListener("input", updateResumePreview);
+document.getElementById("summary").addEventListener("input", updateResumePreview);
 document.getElementById("skills").addEventListener("input", updateResumePreview);
 
 function updateResumePreview() {
@@ -82,6 +125,7 @@ function updateResumePreview() {
     const phone = document.getElementById("phone").value;
     const linkedin = document.getElementById("linkedin").value;
     const portfolio = document.getElementById("portfolio").value;
+    const summary = document.getElementById("summary").value;
 
     const educationGroups = document.querySelectorAll(".education-entry");
     let educationDetails = "";
@@ -104,8 +148,35 @@ function updateResumePreview() {
         const responsibilities = group.querySelector('textarea[name="responsibilities"]').value;
 
         experiences += `
-            <p><strong>${jobTitle}</strong> at ${company} (${workDates})</p>
-            <p>${responsibilities}</p>
+            <div class="experience-item">
+                <p><strong>${jobTitle}</strong> at ${company} (${workDates})</p>
+                <p>${responsibilities}</p>
+            </div>
+        `;
+    });
+
+    const projectGroups = document.querySelectorAll(".project-entry");
+    let projects = "";
+    projectGroups.forEach((group) => {
+        const projectTitle = group.querySelector('input[name="project-title"]').value;
+        const projectDescription = group.querySelector('textarea[name="project-description"]').value;
+
+        projects += `
+            <div class="project-item">
+                <p><strong>${projectTitle}</strong></p>
+                <p>${projectDescription}</p>
+            </div>
+        `;
+    });
+
+    const certificationGroups = document.querySelectorAll(".certification-entry");
+    let certifications = "";
+    certificationGroups.forEach((group) => {
+        const certificationTitle = group.querySelector('input[name="certification-title"]').value;
+        const certificationYear = group.querySelector('input[name="certification-year"]').value;
+
+        certifications += `
+            <p><strong>${certificationTitle}</strong> (${certificationYear})</p>
         `;
     });
 
@@ -114,13 +185,21 @@ function updateResumePreview() {
 
     const output = `
         <div class="${style}">
-            <h1>${name}</h1>
-            <p><strong>Email:</strong> ${email} | <strong>Phone:</strong> ${phone}</p>
-            <p><strong>LinkedIn:</strong> ${linkedin} | <strong>Portfolio:</strong> ${portfolio}</p>
+            <div class="header">
+                <h1>${name}</h1>
+                <p><strong>Email:</strong> ${email} | <strong>Phone:</strong> ${phone}</p>
+                <p><strong>LinkedIn:</strong> ${linkedin} | <strong>Portfolio:</strong> ${portfolio}</p>
+            </div>
+            <h2>Summary</h2>
+            <p>${summary}</p>
             <h2>Education</h2>
             ${educationDetails}
             <h2>Work Experience</h2>
             ${experiences}
+            <h2>Projects</h2>
+            ${projects}
+            <h2>Certifications</h2>
+            ${certifications}
             <h2>Skills</h2>
             <p>${skills}</p>
         </div>
@@ -132,28 +211,26 @@ function updateResumePreview() {
     document.getElementById("download-resume").classList.remove("hidden");
 }
 
-document.getElementById("download-resume").addEventListener("click", function () {
-    const doc = new jspdf.jsPDF({
-        format: 'letter', // 8.5 x 11 inches
-        unit: 'in',
-    });
-    const content = document.getElementById("resume-output");
-    doc.html(content, {
-        callback: function (doc) {
-            doc.save("resume.pdf");
-        },
-        x: 0.5,
-        y: 0.5,
-        width: 7.5, // Adjust width
-    });
+document.getElementById("download-resume").addEventListener("click", () => {
+    const element = document.getElementById("resume-output");
+    const opt = {
+        margin:        0,
+        filename:     'resume.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 4, useCORS: true }, // Added useCORS for better rendering
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    html2pdf().from(element).set(opt).save();
 });
 
 document.getElementById("autofill-resume").addEventListener("click", function () {
-    document.getElementById("name").value = "John Doe";
-    document.getElementById("email").value = "johndoe@example.com";
-    document.getElementById("phone").value = "+1 123-456-7890";
-    document.getElementById("linkedin").value = "https://linkedin.com/in/johndoe";
-    document.getElementById("portfolio").value = "https://johndoe.dev";
+    document.getElementById("name").value = "Aadithya Srinivasan";
+    document.getElementById("email").value = "aasri@seas.upenn.edu";
+    document.getElementById("phone").value = "+1 908-565-1881";
+    document.getElementById("linkedin").value = "https://linkedin.com/in/aadithya-srinivasan-777936269/";
+    document.getElementById("portfolio").value = "https://asrinivasan75.github.io/";
+    document.getElementById("summary").value = "Experienced professional with a strong background in software engineering and data analysis.";
 
     document.getElementById("education-container").innerHTML = `
         <div class="education-entry">
@@ -163,7 +240,7 @@ document.getElementById("autofill-resume").addEventListener("click", function ()
             </div>
             <div class="input-group">
                 <label for="institution">Institution</label>
-                <input type="text" name="institution" placeholder="XYZ University" value="XYZ University">
+                <input type="text" name="institution" placeholder="University of Pennsylvania" value="University of Pennsylvania">
             </div>
             <div class="input-group">
                 <label for="graduation-year">Graduation Year</label>
@@ -172,7 +249,7 @@ document.getElementById("autofill-resume").addEventListener("click", function ()
             <button type="button" class="remove-entry-button">Remove</button>
         </div>
     `;
-    
+
     document.getElementById("experience-container").innerHTML = `
         <div class="work-experience-group">
             <div class="input-group">
@@ -193,9 +270,80 @@ document.getElementById("autofill-resume").addEventListener("click", function ()
             </div>
             <button type="button" class="remove-entry-button">Remove</button>
         </div>
+        <div class="work-experience-group">
+            <div class="input-group">
+                <label for="job-title">Job Title</label>
+                <input type="text" name="job-title" placeholder="Data Analyst" value="Data Analyst">
+            </div>
+            <div class="input-group">
+                <label for="company">Company</label>
+                <input type="text" name="company" placeholder="XYZ Inc." value="XYZ Inc.">
+            </div>
+            <div class="input-group">
+                <label for="work-dates">Dates Worked</label>
+                <input type="text" name="work-dates" placeholder="Jan 2018 - Dec 2019" value="Jan 2018 - Dec 2019">
+            </div>
+            <div class="input-group">
+                <label for="responsibilities">Responsibilities</label>
+                <textarea name="responsibilities" placeholder="Describe your responsibilities and achievements">Analyzed large datasets to provide actionable insights for business strategies.</textarea>
+            </div>
+            <button type="button" class="remove-entry-button">Remove</button>
+        </div>
     `;
 
-    document.getElementById("skills").value = "JavaScript, Python, Team Leadership";
+    document.getElementById("projects-container").innerHTML = `
+        <div class="project-entry">
+            <div class="input-group">
+                <label for="project-title">Project Title</label>
+                <input type="text" name="project-title" placeholder="ML for Predictive Analysis" value="ML for Predictive Analysis">
+            </div>
+            <div class="input-group">
+                <label for="project-description">Description</label>
+                <textarea name="project-description" placeholder="Describe the project">Developed predictive models using machine learning techniques.</textarea>
+            </div>
+            <button type="button" class="remove-entry-button">Remove</button>
+        </div>
+        <div class="project-entry">
+            <div class="input-group">
+                <label for="project-title">Project Title</label>
+                <input type="text" name="project-title" placeholder="Web Development for E-commerce" value="Web Development for E-commerce">
+            </div>
+            <div class="input-group">
+                <label for="project-description">Description</label>
+                <textarea name="project-description" placeholder="Describe the project">Built a full-stack web application for an online store using React and Node.js.</textarea>
+            </div>
+            <button type="button" class="remove-entry-button">Remove</button>
+        </div>
+    `;
+
+    document.getElementById("certifications-container").innerHTML = `
+        <div class="certification-entry">
+            <div class="input-group">
+                <label for="certification-title">Certification Title</label>
+                <input type="text" name="certification-title" placeholder="Certified JavaScript Developer" value="Certified JavaScript Developer">
+            </div>
+            <div class="input-group">
+                <label for="certification-year">Year</label>
+                <input type="text" name="certification-year" placeholder="2021" value="2021">
+            </div>
+            <button type="button" class="remove-entry-button">Remove</button>
+        </div>
+        <div class="certification-entry">
+            <div class="input-group">
+                <label for="certification-title">Certification Title</label>
+                <input type="text" name="certification-title" placeholder="Certified Data Analyst" value="Certified Data Analyst">
+            </div>
+            <div class="input-group">
+                <label for="certification-year">Year</label>
+                <input type="text" name="certification-year" placeholder="2020" value="2020">
+            </div>
+            <button type="button" class="remove-entry-button">Remove</button>
+        </div>
+    `;
+
+    document.getElementById("skills").value = "JavaScript, Python, Machine Learning, Data Analysis, Software Engineering, React, Node.js";
 
     updateResumePreview();
 });
+
+document.getElementById("generate-resume").addEventListener("click", updateResumePreview);
