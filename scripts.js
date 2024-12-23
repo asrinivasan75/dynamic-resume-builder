@@ -420,3 +420,8 @@ document.getElementById("autofill-resume").addEventListener("click", function ()
 });
 
 document.getElementById("generate-resume").addEventListener("click", updateResumePreview);
+document.getElementById("color-picker").addEventListener("input", function(event) {
+    const selectedColor = event.target.value;
+    document.documentElement.style.setProperty('--primary-color', selectedColor);
+    updateResumePreview();
+});
